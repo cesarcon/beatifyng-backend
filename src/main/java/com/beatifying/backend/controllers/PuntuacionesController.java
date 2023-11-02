@@ -7,10 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(*/Score*)
+@RequestMapping("/Score")
 public class PuntuacionesController {
     @Autowired
     private PuntuacionesService puntuacionesService;
@@ -24,7 +25,9 @@ public class PuntuacionesController {
     @PostMapping
     public ResponseEntity<List<Puntuaciones>> guardarPuntuaciones (@RequestBody Puntuaciones puntuaciones){
       Puntuaciones nuevaPuntuaciones = puntuacionesService.guardarPuntuaciones(puntuaciones);
+      List<Puntuaciones> list = new ArrayList<>();
+      list.add(nuevaPuntuaciones);
 
-        return new ResponseEntity<>(nuevaPuntuaciones, HttpStatus.CREATED);
+        return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 }

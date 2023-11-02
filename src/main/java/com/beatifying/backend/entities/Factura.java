@@ -1,6 +1,9 @@
 package com.beatifying.backend.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="facturas")
@@ -9,18 +12,24 @@ public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFactura;
+    private LocalDateTime fecha;
+    private double subTotalVenta;
+    private double totalImpuesto;
     private double totalVenta;
-    private int fecha;
-    private double precio;
+
+    private Integer codigoFactura;
 
     public Factura() {
+
     }
 
-    public Factura(int idFactura, double totalVenta, int fecha, double precio) {
+    public Factura(int idFactura, LocalDateTime fecha, double subTotalVenta, double totalImpuesto, double totalVenta, Integer codigoFactura) {
         this.idFactura = idFactura;
-        this.totalVenta = totalVenta;
         this.fecha = fecha;
-        this.precio = precio;
+        this.subTotalVenta = subTotalVenta;
+        this.totalImpuesto = totalImpuesto;
+        this.totalVenta = totalVenta;
+        this.codigoFactura = codigoFactura;
     }
 
     public int getIdFactura() {
@@ -31,6 +40,30 @@ public class Factura {
         this.idFactura = idFactura;
     }
 
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
+    public double getSubTotalVenta() {
+        return subTotalVenta;
+    }
+
+    public void setSubTotalVenta(double subTotalVenta) {
+        this.subTotalVenta = subTotalVenta;
+    }
+
+    public double getTotalImpuesto() {
+        return totalImpuesto;
+    }
+
+    public void setTotalImpuesto(double totalImpuesto) {
+        this.totalImpuesto = totalImpuesto;
+    }
+
     public double getTotalVenta() {
         return totalVenta;
     }
@@ -39,19 +72,11 @@ public class Factura {
         this.totalVenta = totalVenta;
     }
 
-    public int getFecha() {
-        return fecha;
+    public Integer getCodigoFactura() {
+        return codigoFactura;
     }
 
-    public void setFecha(int fecha) {
-        this.fecha = fecha;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public void setCodigoFactura(Integer codigoFactura) {
+        this.codigoFactura = codigoFactura;
     }
 }

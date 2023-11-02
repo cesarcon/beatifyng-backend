@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "detalles_factura")
-public class Detalles_Factura {
+public class DetalleFactura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Detalles_Factura {
     private double iva;
 
 
-    public Detalles_Factura(int idDetallesFactura, int cantidad, double totalDetalle, double iva, int idFactura, int idServicios) {
+    public DetalleFactura(int idDetallesFactura, int cantidad, double totalDetalle, double iva, int idFactura, int idServicios) {
         this.idDetallesFactura = idDetallesFactura;
         this.cantidad = cantidad;
         this.totalDetalle = totalDetalle;
