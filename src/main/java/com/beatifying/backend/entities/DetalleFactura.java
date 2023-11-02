@@ -1,10 +1,6 @@
 package com.beatifying.backend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "detalles_factura")
@@ -16,6 +12,10 @@ public class DetalleFactura {
     private int cantidad;
     private double totalDetalle;
     private double iva;
+
+    @ManyToOne
+    @JoinColumn(name = "id_servicio")
+    private Servicio servicio;
 
 
     public DetalleFactura(int idDetallesFactura, int cantidad, double totalDetalle, double iva, int idFactura, int idServicios) {

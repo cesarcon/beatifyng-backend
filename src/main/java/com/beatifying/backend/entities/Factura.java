@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="facturas")
@@ -16,8 +17,17 @@ public class Factura {
     private double subTotalVenta;
     private double totalImpuesto;
     private double totalVenta;
-
     private Integer codigoFactura;
+    @ManyToOne
+    @JoinColumn(name = "id_comprador")
+    private Usuario comprador;
+    @ManyToOne
+    @JoinColumn(name = "id_vendedor")
+    private Usuario vendedor;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_factura")
+    private List<DetalleFactura> detallesFactura;
 
     public Factura() {
 

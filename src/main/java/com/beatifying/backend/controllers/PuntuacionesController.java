@@ -1,6 +1,6 @@
 package com.beatifying.backend.controllers;
 
-import com.beatifying.backend.entities.Puntuaciones;
+import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.services.PuntuacionesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,16 +17,16 @@ public class PuntuacionesController {
     private PuntuacionesService puntuacionesService;
 
     @GetMapping
-    public ResponseEntity<List<Puntuaciones>> consultarPuntuaciones() {
-        List<Puntuaciones> puntuaciones = puntuacionesService.consultarPuntuaciones();
+    public ResponseEntity<List<Puntuacion>> consultarPuntuaciones() {
+        List<Puntuacion> puntuaciones = puntuacionesService.consultarPuntuaciones();
         return new ResponseEntity<>(puntuaciones, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<List<Puntuaciones>> guardarPuntuaciones (@RequestBody Puntuaciones puntuaciones){
-      Puntuaciones nuevaPuntuaciones = puntuacionesService.guardarPuntuaciones(puntuaciones);
-      List<Puntuaciones> list = new ArrayList<>();
-      list.add(nuevaPuntuaciones);
+    public ResponseEntity<List<Puntuacion>> guardarPuntuaciones (@RequestBody Puntuacion puntuacion){
+      Puntuacion nuevaPuntuacion = puntuacionesService.guardarPuntuaciones(puntuacion);
+      List<Puntuacion> list = new ArrayList<>();
+      list.add(nuevaPuntuacion);
 
         return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
