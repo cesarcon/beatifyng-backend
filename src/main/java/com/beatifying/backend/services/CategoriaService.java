@@ -13,15 +13,15 @@ public class CategoriaService {
     private CategoriaRepository categoriaRepository;
 
     public Categoria guardarCategoria(Categoria categoria) {
-        return CategoriaRepository.save(categoria);
+        return categoriaRepository.save(categoria);
     }
 
     public List<Categoria> consultarCategorias (){
-        return (List<Categoria>) CategoriaRepository.findAll();
+        return (List<Categoria>) categoriaRepository.findAll();
     }
 
-    public Categoria consultarPorNombre (String nombre) {
-        Optional<Categoria> categoria = CategoriaRepository.findById(String nombre);
+    public Categoria consultarPorId (Integer id) {
+        Optional<Categoria> categoria = categoriaRepository.findById(id);
         if(categoria.isPresent()){
             return categoria.get();
         } else {
