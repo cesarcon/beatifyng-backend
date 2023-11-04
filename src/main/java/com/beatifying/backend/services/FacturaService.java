@@ -6,6 +6,8 @@ import com.beatifying.backend.repositories.FacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class FacturaService {
 
@@ -13,7 +15,7 @@ public class FacturaService {
     private FacturaRepository facturaRepository;
 
     public Factura crearFactura(Factura factura){
-        Factura factura1 = new Factura();
+        Factura factura1 = Factura.builder().idFactura(1).fecha(LocalDateTime.now()).build();
         return null;
     }
 
