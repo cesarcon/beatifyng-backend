@@ -15,8 +15,7 @@ public class FacturaService {
     private FacturaRepository facturaRepository;
 
     public Factura crearFactura(Factura factura){
-        Factura factura1 = Factura.builder().idFactura(1).fecha(LocalDateTime.now()).comprador(2).vendedor(3).build();
-        return null;
+        return facturaRepository.save(factura);
     }
 
 }
