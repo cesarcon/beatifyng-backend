@@ -1,5 +1,6 @@
 package com.beatifying.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFactura;
+    @JsonFormat(pattern= "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime fecha;
     private double subTotalVenta;
     private double totalImpuesto;
