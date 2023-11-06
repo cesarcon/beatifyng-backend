@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 @NoArgsConstructor
@@ -34,4 +35,10 @@ public class Factura {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_factura")
     private List<DetalleFactura> detallesFactura;
+
+    @PrePersist
+    private void generarFecha(){
+        this.fecha = LocalDateTime.now();
     }
+
+}
