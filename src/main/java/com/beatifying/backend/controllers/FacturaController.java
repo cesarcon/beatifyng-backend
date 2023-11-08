@@ -17,15 +17,6 @@ public class FacturaController {
     @Autowired
     private FacturaService facturaService;
 
-    @PutMapping (value = "/update")
-    public ResponseEntity<Factura> actualizarFactura(@RequestBody Factura factura, @RequestParam int id) {
-        Factura facturaActualizada=facturaService.updateFactura(factura, id);
-        if (facturaActualizada == null){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(facturaActualizada, HttpStatus.OK);
-        }
-    }
 
     @DeleteMapping (value = "/{idFactura}")
     public ResponseEntity<Object> deleteById (@PathVariable int idFactura){
