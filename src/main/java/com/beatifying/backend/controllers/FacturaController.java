@@ -1,5 +1,6 @@
 package com.beatifying.backend.controllers;
 
+import com.beatifying.backend.dto.FacturaDTO;
 import com.beatifying.backend.entities.Factura;
 import com.beatifying.backend.services.FacturaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "factura")
+@RequestMapping("/factura")
 public class FacturaController {
 
     @Autowired
     private FacturaService facturaService;
-
-    @GetMapping (name = "/facturas")
-    public ResponseEntity<List<Factura>> pruebaGet () {
-        return new ResponseEntity<>(facturaService.consultarFacturas(), HttpStatus.OK);
-    }
-    @PostMapping
-    public ResponseEntity<Factura> crearFactura(@RequestBody Factura factura){
-        return new ResponseEntity<>(facturaService.crearFactura(factura), HttpStatus.CREATED);
-    }
 
     @PutMapping (value = "/update")
     public ResponseEntity<Factura> actualizarFactura(@RequestBody Factura factura, @RequestParam int id) {
@@ -42,4 +34,15 @@ public class FacturaController {
     }
 
 
+    @PostMapping
+    public ResponseEntity<Factura> crearFactura(@RequestBody FacturaDTO factura){
+       Factura nuevaFactura = facturaService.crearFactura(factura);
+        return new ResponseEntity<>(nuevaFactura, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Factura>> consultarTodas(){
+        List<Factura> facturas = facturaService.consultarTodas();
+        return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
 }

@@ -1,9 +1,7 @@
 package com.beatifying.backend.services;
 
-import com.beatifying.backend.entities.Detalles_Factura;
-import com.beatifying.backend.entities.Puntuaciones;
+import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.repositories.PuntuacionesRepository;
-import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +12,10 @@ public class PuntuacionesService {
     @Autowired
     private PuntuacionesRepository puntuacionesRepository;
 
-    public Puntuaciones guardarPuntuaciones(Puntuaciones puntuaciones) {
-        return puntuacionesRepository.save(puntuaciones);
+    public Puntuacion guardarPuntuaciones(Puntuacion puntuacion) {
+        return puntuacionesRepository.save(puntuacion);
     }
 
-    public List<Puntuaciones> consultarPuntuaciones () { return (List<Puntuaciones>) puntuacionesRepository.findAll(); }
+    public List<Puntuacion> consultarPuntuaciones () { return (List<Puntuacion>) puntuacionesRepository.findAll(); }
 
 }

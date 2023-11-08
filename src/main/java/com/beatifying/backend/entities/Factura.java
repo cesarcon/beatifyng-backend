@@ -1,7 +1,17 @@
 package com.beatifying.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.*;
 
+
+import java.time.LocalDateTime;
+import java.util.List;
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@Builder
 @Entity
 @Table(name="facturas")
 public class Factura {
@@ -9,49 +19,26 @@ public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFactura;
+    @JsonFormat(pattern= "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime fecha;
+    private double subTotalVenta;
+    private double totalImpuesto;
     private double totalVenta;
-    private int fecha;
-    private double precio;
+    private Integer codigoFactura;
+    @ManyToOne
+    @JoinColumn(name = "id_comprador")
+    private Usuario comprador;
+    @ManyToOne
+    @JoinColumn(name = "id_vendedor")
+    private Usuario vendedor;
 
-    public Factura() {
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_factura")
+    private List<DetalleFactura> detallesFactura;
+
+    @PrePersist
+    private void generarFecha(){
+        this.fecha = LocalDateTime.now();
     }
 
-    public Factura(int idFactura, double totalVenta, int fecha, double precio) {
-        this.idFactura = idFactura;
-        this.totalVenta = totalVenta;
-        this.fecha = fecha;
-        this.precio = precio;
-    }
-
-    public int getIdFactura() {
-        return idFactura;
-    }
-
-    public void setIdFactura(int idFactura) {
-        this.idFactura = idFactura;
-    }
-
-    public double getTotalVenta() {
-        return totalVenta;
-    }
-
-    public void setTotalVenta(double totalVenta) {
-        this.totalVenta = totalVenta;
-    }
-
-    public int getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(int fecha) {
-        this.fecha = fecha;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
 }

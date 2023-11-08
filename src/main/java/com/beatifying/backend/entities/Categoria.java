@@ -1,22 +1,20 @@
 package com.beatifying.backend.entities;
-
 import jakarta.persistence.*;
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
-@Entity
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Table(name = "servicios")
-public class Servicio {
+@Entity
+@Table(name = "categorias")
 
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idServicio;
+    private Integer idCategoria;
     private String nombre;
-    private Float precio;
     private String descripcion;
-    private String urlImagen;
-}
+    private Integer cantidad;
+    }

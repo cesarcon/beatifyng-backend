@@ -18,7 +18,7 @@ public class FacturaService {
 
     public Factura crearFactura (Factura factura) { return facturaRepository.save(factura);}
 
-    public List<Factura> consultarFacturas() {return (List<Factura>) facturaRepository.findAll();}
+    public List<Factura> consultarTodas() {return (List<Factura>) facturaRepository.findAll();}
 
     public  Factura updateFactura (Factura factura, int idFactura){
         Optional<Factura> optional = facturaRepository.findById(idFactura);
