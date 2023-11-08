@@ -1,10 +1,13 @@
 package com.beatifying.backend.services;
 
+import com.beatifying.backend.dto.UsuarioDTO;
+import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +21,31 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> consultarTodos(){
-        return (List<Usuario>) usuarioRepository.findAll();
+    public List<UsuarioDTO> consultarTodos(){
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
+
+        List<UsuarioDTO> usuarioDTOS = new ArrayList<>();
+
+        for (Usuario user: usuarios) {
+            UsuarioDTO userDTO = UsuarioDTO.builder()
+                    .idUsuario(user.getIdUsuario())
+                    .nombre(user.getNombre())
+                    .numeroDocumento(user.getNumeroDocumento())
+                    .numeroTelefono(user.getNumeroTelefono())
+                    .edad(user.getEdad())
+                    .genero(user.getGenero())
+                    .ciudad(user.getCiudad())
+                    .direccion(user.getDireccion())
+                    .email(user.getEmail())
+                    .idTipoUsuario(user.getIdTipoUsuario())
+                    .latitud(user.getLatitud())
+                    .longitud(user.getLongitud())
+                    .puntuacion(calcularPuntajePromedio(user.getPuntuaciones()))
+                    .build();
+
+            usuarioDTOS.add(userDTO);
+        }
+        return usuarioDTOS;
     }
 
     public List<Usuario> buscarPorEmailNombre(String email, String nombre){
@@ -49,6 +75,18 @@ public class UsuarioService {
         Optional<Usuario> optional = usuarioRepository.findByNumeroDocumentoAndPassword(numeroDocumento, password);
 
         return optional.isPresent();
+    }
+
+    private Double calcularPuntajePromedio(List<Puntuacion> puntuaciones) {
+        if(puntuaciones.size() <1) {
+            return null;
+        } else {
+            Double sumaElementos = 0.0;
+            for (Puntuacion puntuacion: puntuaciones) {
+                sumaElementos = sumaElementos + puntuacion.getValor();
+            }
+            return sumaElementos/puntuaciones.size();
+        }
     }
 
 
