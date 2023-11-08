@@ -1,6 +1,7 @@
 package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.dto.Login;
+import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> pruebaGet() {
+    public ResponseEntity<List<UsuarioDTO>> consultarTodos() {
         return new ResponseEntity<>(usuarioService.consultarTodos(), HttpStatus.OK);
     }
 

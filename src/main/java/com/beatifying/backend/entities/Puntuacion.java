@@ -15,7 +15,7 @@ public class Puntuacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPuntuacion;
-    private int valor;
+    private double valor;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_calificado")
