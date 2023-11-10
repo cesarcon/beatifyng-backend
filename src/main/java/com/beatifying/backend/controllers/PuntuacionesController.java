@@ -1,5 +1,6 @@
 package com.beatifying.backend.controllers;
 
+import com.beatifying.backend.dto.PuntuacionDTO;
 import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.services.PuntuacionesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,8 @@ public class PuntuacionesController {
     }
 
     @PostMapping
-    public ResponseEntity<List<Puntuacion>> guardarPuntuaciones (@RequestBody Puntuacion puntuacion){
-      Puntuacion nuevaPuntuacion = puntuacionesService.guardarPuntuaciones(puntuacion);
-      List<Puntuacion> list = new ArrayList<>();
-      list.add(nuevaPuntuacion);
+    public ResponseEntity<Puntuacion> guardarPuntuaciones (@RequestBody PuntuacionDTO puntuacionDTO){
 
-        return new ResponseEntity<>(list, HttpStatus.CREATED);
+        return new ResponseEntity<>(puntuacionesService.guardarPuntuaciones(puntuacionDTO),HttpStatus.CREATED);
     }
 }

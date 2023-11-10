@@ -30,8 +30,4 @@ public class Usuario {
     private double latitud;
     private double longitud;
 
-    @OneToMany
-    @JoinColumn(name = "id_usuario_calificado")
-    private List<Puntuacion> puntuaciones;
-
 }

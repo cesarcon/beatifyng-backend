@@ -3,6 +3,7 @@ package com.beatifying.backend.services;
 import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.entities.Usuario;
+import com.beatifying.backend.repositories.PuntuacionesRepository;
 import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PuntuacionesRepository  puntuacionesRepository;
 
     public Usuario crearUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
@@ -40,7 +44,7 @@ public class UsuarioService {
                     .idTipoUsuario(user.getIdTipoUsuario())
                     .latitud(user.getLatitud())
                     .longitud(user.getLongitud())
-                    .puntuacion(calcularPuntajePromedio(user.getPuntuaciones()))
+                    .puntuacion(calcularPuntajePromedio(consultarPuntuaciones(user)))
                     .build();
 
             usuarioDTOS.add(userDTO);
@@ -75,6 +79,11 @@ public class UsuarioService {
         Optional<Usuario> optional = usuarioRepository.findByNumeroDocumentoAndPassword(numeroDocumento, password);
 
         return optional.isPresent();
+    }
+
+    private List<Puntuacion> consultarPuntuaciones (Usuario usuario) {
+
+        return puntuacionesRepository.findAllByCalificado(usuario);
     }
 
     private Double calcularPuntajePromedio(List<Puntuacion> puntuaciones) {
