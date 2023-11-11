@@ -88,7 +88,7 @@ public class UsuarioService {
 
     private Double calcularPuntajePromedio(List<Puntuacion> puntuaciones) {
         if(puntuaciones.size() <1) {
-            return null;
+            return 0.0;
         } else {
             Double sumaElementos = 0.0;
             for (Puntuacion puntuacion: puntuaciones) {

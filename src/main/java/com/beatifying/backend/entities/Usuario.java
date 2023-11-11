@@ -3,7 +3,6 @@ package com.beatifying.backend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +28,4 @@ public class Usuario {
     private int idTipoUsuario;
     private double latitud;
     private double longitud;
-
 }

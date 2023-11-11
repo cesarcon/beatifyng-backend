@@ -19,4 +19,11 @@ public class Servicio {
     private Float precio;
     private String descripcion;
     private String urlImagen;
+
+    @Column(name = "id_categoria", insertable = false, updatable = false)
+    private Integer idCategoria;
+
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
 }
