@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
+@CrossOrigin("*")
 public class UsuarioController {
 
     @Autowired
@@ -56,13 +57,13 @@ public class UsuarioController {
     }
 
     @PostMapping (value = "/login")
-    public ResponseEntity<String> login(@RequestBody Login login) {
-        boolean esValido = usuarioService.login(login.getNumeroDocumento(), login.getPassword());
+    public ResponseEntity<UsuarioDTO> login(@RequestBody Login login) {
+        UsuarioDTO user = usuarioService.login(login.getNumeroDocumento(), login.getPassword());
 
-        if (esValido) {
-            return new ResponseEntity<>("Usuario Autenticado", HttpStatus.OK);
+        if (user !=null) {
+            return new ResponseEntity<>(usuarioService.login(login.getNumeroDocumento(), login.getPassword()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Credenciales invalidas", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
         }
     }
 }

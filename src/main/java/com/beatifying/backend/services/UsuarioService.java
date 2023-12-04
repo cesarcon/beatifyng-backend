@@ -75,10 +75,16 @@ public class UsuarioService {
 
     }
 
-    public boolean login (String numeroDocumento, String password) {
+    public UsuarioDTO login (String numeroDocumento, String password) {
         Optional<Usuario> optional = usuarioRepository.findByNumeroDocumentoAndPassword(numeroDocumento, password);
-
-        return optional.isPresent();
+        if (optional.isPresent()){
+            return UsuarioDTO.builder()
+                    .nombre(optional.get().getNombre())
+                    .idTipoUsuario(optional.get().getIdTipoUsuario())
+                    .build();
+        } else {
+            return null;
+        }
     }
 
     private List<Puntuacion> consultarPuntuaciones (Usuario usuario) {

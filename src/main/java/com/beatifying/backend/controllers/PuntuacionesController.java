@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Score")
+@CrossOrigin("*")
 public class PuntuacionesController {
     @Autowired
     private PuntuacionesService puntuacionesService;
