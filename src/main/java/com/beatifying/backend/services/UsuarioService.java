@@ -1,6 +1,7 @@
 package com.beatifying.backend.services;
 
 import com.beatifying.backend.dto.UsuarioDTO;
+import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.repositories.PuntuacionesRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,7 +38,7 @@ public class UsuarioService {
                     .nombre(user.getNombre())
                     .numeroDocumento(user.getNumeroDocumento())
                     .numeroTelefono(user.getNumeroTelefono())
-                    .edad(user.getEdad())
+                    .fechaNacimiento(user.getFechaNacimiento())
                     .genero(user.getGenero())
                     .ciudad(user.getCiudad())
                     .direccion(user.getDireccion())
@@ -45,6 +47,7 @@ public class UsuarioService {
                     .latitud(user.getLatitud())
                     .longitud(user.getLongitud())
                     .puntuacion(calcularPuntajePromedio(consultarPuntuaciones(user)))
+                    .imagenPrincipal(user.getImagenPrincipal())
                     .build();
 
             usuarioDTOS.add(userDTO);
@@ -104,5 +107,19 @@ public class UsuarioService {
         }
     }
 
+    public List<UsuarioDestacadosDTO> usuariosDestacados() {
+        List<Map<String, Object>> resultados = usuarioRepository.usuariosDestacados();
+        List<UsuarioDestacadosDTO> destacadosDTOS = new ArrayList<>();
+        resultados.forEach( x -> {
+            UsuarioDestacadosDTO usuarioDestacadosDTO = new UsuarioDestacadosDTO();
+            usuarioDestacadosDTO.setIdUsuario((Integer) x.get("idUsuario"));
+            usuarioDestacadosDTO.setNombre((String) x.get("nombre"));
+            usuarioDestacadosDTO.setPuntuacion((Double) x.get("puntuacion"));
+            usuarioDestacadosDTO.setFoto((String) x.get("foto"));
+            destacadosDTOS.add(usuarioDestacadosDTO);
+                });
+
+        return destacadosDTOS;
+    }
 
 }

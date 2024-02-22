@@ -3,6 +3,8 @@ package com.beatifying.backend.dto;
 import jakarta.persistence.Column;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class UsuarioDTO {
     private String nombre;
     private String numeroDocumento;
     private String numeroTelefono;
-    private int edad;
+    private LocalDate fechaNacimiento;
     private String genero;
     private String ciudad;
     private String direccion;
@@ -22,4 +24,5 @@ public class UsuarioDTO {
     private double latitud;
     private double longitud;
     private double puntuacion;
+    private String imagenPrincipal;
 }

@@ -2,6 +2,7 @@ package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.dto.Login;
 import com.beatifying.backend.dto.UsuarioDTO;
+import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,10 @@ public class UsuarioController {
         } else {
             return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
         }
+    }
+
+    @GetMapping (value = "/destacados")
+    public ResponseEntity<List<UsuarioDestacadosDTO>> usuariosDestacados() {
+        return new ResponseEntity<>(usuarioService.usuariosDestacados(), HttpStatus.OK);
     }
 }

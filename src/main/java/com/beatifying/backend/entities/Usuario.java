@@ -3,6 +3,8 @@ package com.beatifying.backend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +21,8 @@ public class Usuario {
     @Column(name = "numero_documento")
     private String numeroDocumento;
     private String numeroTelefono;
-    private int edad;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
     private String genero;
     private String ciudad;
     private String direccion;
@@ -28,4 +31,6 @@ public class Usuario {
     private int idTipoUsuario;
     private double latitud;
     private double longitud;
+    @Column(name = "img_ppal")
+    private String imagenPrincipal;
 }
