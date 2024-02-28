@@ -5,12 +5,16 @@ import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.services.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -26,7 +30,10 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<?> crearUsuario(@Valid @RequestBody Usuario usuario, BindingResult result){
+        if (result.hasErrors()) {
+            return validation(result);
+        }
         return new ResponseEntity<>(usuarioService.crearUsuario(usuario), HttpStatus.CREATED);
     }
     @GetMapping("/consultar-por-email/{email}/{nombre}")
@@ -71,5 +78,14 @@ public class UsuarioController {
     @GetMapping (value = "/destacados")
     public ResponseEntity<List<UsuarioDestacadosDTO>> usuariosDestacados() {
         return new ResponseEntity<>(usuarioService.usuariosDestacados(), HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> validation(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }
