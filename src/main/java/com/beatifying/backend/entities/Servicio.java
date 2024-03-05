@@ -1,6 +1,9 @@
 package com.beatifying.backend.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @AllArgsConstructor
@@ -15,8 +18,11 @@ public class Servicio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idServicio;
+    @NotBlank
     private String nombre;
-    private Float precio;
+    @NotNull
+    private Integer precio;
+    @NotBlank
     private String descripcion;
     private String urlImagen;
 

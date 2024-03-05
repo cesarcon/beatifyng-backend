@@ -2,12 +2,16 @@ package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.entities.Servicio;
 import com.beatifying.backend.services.ServicioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/services")
@@ -24,7 +28,10 @@ public class ServicioController {
     }
 
     @PostMapping
-    public ResponseEntity<Servicio> crearServicio (@RequestBody Servicio servicio){
+    public ResponseEntity<?> crearServicio (@Valid @RequestBody Servicio servicio, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return validation(bindingResult);
+        }
         Servicio nuevoServicio = servicioService.guardarServicio(servicio);
 
         return new ResponseEntity<>(nuevoServicio, HttpStatus.CREATED);
@@ -42,5 +49,13 @@ public class ServicioController {
         }
     }
 
+    private ResponseEntity<?> validation(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
+    }
 
 }
