@@ -2,10 +2,16 @@ package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.entities.DetalleFactura;
 import com.beatifying.backend.services.Detalles_FacturaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -17,8 +23,12 @@ public class Detalles_FacturaController {
     private Detalles_FacturaService detalles_facturaService;
 
     @PostMapping
-    public ResponseEntity<DetalleFactura> crearDetalles_Factura(@RequestBody DetalleFactura detalle_factura) {
+    public ResponseEntity<?> crearDetalles_Factura(@Valid @RequestBody DetalleFactura detalle_factura, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validation(bindingResult);
+        }
         DetalleFactura generardetalles_factura = detalles_facturaService.guardarDetalles_Factura(detalle_factura);
+
         return new ResponseEntity<>(generardetalles_factura, HttpStatus.CREATED);
     }
 
@@ -34,5 +44,13 @@ public class Detalles_FacturaController {
         }
     }
 
+    private ResponseEntity<?> validation(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
+    }
 
 }

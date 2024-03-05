@@ -1,6 +1,7 @@
 package com.beatifying.backend.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -15,7 +16,9 @@ public class DetalleFactura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDetallesFactura;
-    private int cantidad;
+
+    @NotNull
+    private Integer cantidad;
     private double totalDetalle;
     private double iva;
 
