@@ -1,5 +1,6 @@
 package com.beatifying.backend.entities;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -14,6 +15,9 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCategoria;
+
+    @NotBlank
     private String nombre;
+    @NotBlank
     private String descripcion;
     }
