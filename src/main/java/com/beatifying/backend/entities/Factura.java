@@ -2,6 +2,9 @@ package com.beatifying.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 
@@ -20,10 +23,15 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFactura;
     @JsonFormat(pattern= "dd-MM-yyyy HH:mm:ss")
+    @NotNull
     private LocalDateTime fecha;
+    @NotNull
     private double subTotalVenta;
+    @NotNull
     private double totalImpuesto;
+    @NotNull
     private double totalVenta;
+    @NotNull
     private Integer codigoFactura;
     @ManyToOne
     @JoinColumn(name = "id_comprador")
