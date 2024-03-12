@@ -1,6 +1,7 @@
 package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.dto.FacturaDTO;
+import com.beatifying.backend.entities.Categoria;
 import com.beatifying.backend.entities.Factura;
 import com.beatifying.backend.services.FacturaService;
 import jakarta.validation.Valid;
@@ -32,11 +33,12 @@ public class FacturaController {
 
 
     @PostMapping
-    public ResponseEntity<?> crearFactura(@Valid @RequestBody FacturaDTO factura, BindingResult result) {
-        if (result.hasErrors()) {
-            return validation(result);
+    public ResponseEntity<?> crearFactura(@Valid @RequestBody FacturaDTO factura, BindingResult bindingresult) {
+        if (bindingresult.hasErrors()) {
+            return validation(bindingresult);
         }
-        return new ResponseEntity<>(facturaService.crearFactura(factura), HttpStatus.CREATED);
+        Factura nuevoFactura = facturaService.crearFactura(factura);
+        return new ResponseEntity<>(nuevoFactura, HttpStatus.CREATED);
     }
 
 
