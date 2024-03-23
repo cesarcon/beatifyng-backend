@@ -1,14 +1,20 @@
 package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.dto.FacturaDTO;
+import com.beatifying.backend.entities.Categoria;
 import com.beatifying.backend.entities.Factura;
 import com.beatifying.backend.services.FacturaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/factura")
@@ -19,22 +25,29 @@ public class FacturaController {
     private FacturaService facturaService;
 
 
-    @DeleteMapping (value = "/{idFactura}")
-    public ResponseEntity<Object> deleteById (@PathVariable int idFactura){
+    @DeleteMapping(value = "/{idFactura}")
+    public ResponseEntity<Object> deleteById(@PathVariable int idFactura) {
         this.facturaService.deleteById(idFactura);
         return ResponseEntity.ok(Boolean.TRUE);
     }
 
 
     @PostMapping
-    public ResponseEntity<Factura> crearFactura(@RequestBody FacturaDTO factura){
-       Factura nuevaFactura = facturaService.crearFactura(factura);
-        return new ResponseEntity<>(nuevaFactura, HttpStatus.CREATED);
+    public ResponseEntity<?> crearFactura(@Valid @RequestBody FacturaDTO factura, BindingResult bindingresult) {
+        if (bindingresult.hasErrors()) {
+            return validation(bindingresult);
+        }
+        Factura nuevoFactura = facturaService.crearFactura(factura);
+        return new ResponseEntity<>(nuevoFactura, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Factura>> consultarTodas(){
-        List<Factura> facturas = facturaService.consultarTodas();
-        return new ResponseEntity<>(facturas, HttpStatus.OK);
+
+    private ResponseEntity<?> validation(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }
