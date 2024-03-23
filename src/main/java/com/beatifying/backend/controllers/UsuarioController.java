@@ -48,7 +48,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping (value="/{idUsuario}/delete")
-    public ResponseEntity<Object> deleteById (@PathVariable int idUsuario){
+    public ResponseEntity<Object> deleteById (@PathVariable Integer idUsuario){
         this.usuarioService.deleteById(idUsuario);
         return ResponseEntity.ok(Boolean.TRUE);
     }

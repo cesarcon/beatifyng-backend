@@ -21,8 +21,8 @@ public class UsuarioDTO {
     private String direccion;
     private String email;
     private int idTipoUsuario;
-    private double latitud;
-    private double longitud;
-    private double puntuacion;
+    private Double latitud;
+    private Double longitud;
+    private Double puntuacion;
     private String imagenPrincipal;
 }

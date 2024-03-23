@@ -63,7 +63,7 @@ public class UsuarioService {
         return usuarioRepository.findByGenero(genero);
     }
 
-    public void deleteById (int idUsuario) {
+    public void deleteById (Integer idUsuario) {
         usuarioRepository.deleteById(idUsuario);
 
     }
@@ -71,6 +71,10 @@ public class UsuarioService {
     public Usuario updateUser(Usuario usuario, int idUsuario) {
         Optional<Usuario> optional = usuarioRepository.findById(idUsuario);
         if (optional.isPresent()) {
+            Usuario usuarioActualizado = usuario;
+            usuarioActualizado.setPassword(optional.get().getPassword());
+            usuarioActualizado.setLatitud(optional.get().getLatitud());
+            usuarioActualizado.setLongitud(optional.get().getLongitud());
             return usuarioRepository.save(usuario);
         } else {
             return null;

@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "usuarios")
-public class Usuario {
+public class UsuarioDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +43,13 @@ public class Usuario {
     private Double longitud;
     @Column(name = "img_ppal")
     private String imagenPrincipal;
+
+    @OneToMany(mappedBy = "comprador", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Factura> compras;
+    @OneToMany(mappedBy = "vendedor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Factura> ventas;
+    @OneToMany(mappedBy = "calificado", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Puntuacion> miPuntuacion;
+    @OneToMany(mappedBy = "calificador", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Puntuacion> calificacionesAOtros;
 }
