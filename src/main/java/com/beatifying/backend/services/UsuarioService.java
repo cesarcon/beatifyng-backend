@@ -5,6 +5,7 @@ import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.repositories.PuntuacionesRepository;
+import com.beatifying.backend.repositories.UsuarioDetailRepository;
 import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioDetailRepository usuarioDetailRepository;
 
     @Autowired
     private PuntuacionesRepository  puntuacionesRepository;
@@ -64,7 +67,7 @@ public class UsuarioService {
     }
 
     public void deleteById (Integer idUsuario) {
-        usuarioRepository.deleteById(idUsuario);
+        usuarioDetailRepository.deleteById(idUsuario);
 
     }
 
