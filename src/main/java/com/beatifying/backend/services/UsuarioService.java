@@ -8,6 +8,7 @@ import com.beatifying.backend.repositories.PuntuacionesRepository;
 import com.beatifying.backend.repositories.UsuarioDetailRepository;
 import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +27,12 @@ public class UsuarioService {
     @Autowired
     private PuntuacionesRepository  puntuacionesRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Usuario crearUsuario(Usuario usuario) {
+        String password = passwordEncoder.encode(usuario.getPassword());
+        usuario.setPassword(password);
         return usuarioRepository.save(usuario);
     }
 

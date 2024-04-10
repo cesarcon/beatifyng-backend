@@ -66,9 +66,11 @@ public class UsuarioController {
 
     @PostMapping (value = "/login")
     public ResponseEntity<UsuarioDTO> login(@RequestBody Login login) {
+        System.out.println("EN login");
         UsuarioDTO user = usuarioService.login(login.getNumeroDocumento(), login.getPassword());
 
         if (user !=null) {
+
             return new ResponseEntity<>(usuarioService.login(login.getNumeroDocumento(), login.getPassword()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
