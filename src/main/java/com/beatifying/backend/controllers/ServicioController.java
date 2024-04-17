@@ -27,6 +27,18 @@ public class ServicioController {
         return new ResponseEntity<>(servicios, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{idUsuario}")
+    public ResponseEntity<List<Servicio>> consultarServiciosPorUsuario(@PathVariable Integer idUsuario) {
+        List<Servicio> servicios = servicioService.consultarServiciosPorUsuario(idUsuario);
+        return new ResponseEntity<>(servicios, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{idService}")
+    public ResponseEntity<Object> borrarPorId(@PathVariable Integer idService) {
+        servicioService.borrarPorId(idService);
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
+
     @PostMapping
     public ResponseEntity<?> crearServicio (@Valid @RequestBody Servicio servicio, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {

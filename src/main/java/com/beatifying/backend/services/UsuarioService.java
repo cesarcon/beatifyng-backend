@@ -3,6 +3,7 @@ package com.beatifying.backend.services;
 import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Puntuacion;
+import com.beatifying.backend.entities.Role;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.repositories.PuntuacionesRepository;
 import com.beatifying.backend.repositories.UsuarioDetailRepository;
@@ -33,6 +34,14 @@ public class UsuarioService {
     public Usuario crearUsuario(Usuario usuario) {
         String password = passwordEncoder.encode(usuario.getPassword());
         usuario.setPassword(password);
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.builder().id(2L).name("ROLE_USER").build());
+        if (usuario.getIdTipoUsuario()== 1) {
+            roles.add(Role.builder().id(4L).name("ROLE_SELLER").build());
+        } else if (usuario.getIdTipoUsuario()== 2) {
+            roles.add(Role.builder().id(3L).name("ROLE_BUYER").build());
+        }
+        usuario.setRoles(roles);
         return usuarioRepository.save(usuario);
     }
 
@@ -135,4 +144,12 @@ public class UsuarioService {
         return destacadosDTOS;
     }
 
+    public Usuario buscarUsuarioPorId(Integer id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if (usuario.isPresent()) {
+            return usuario.get();
+        } else {
+            return null;
+        }
+    }
 }

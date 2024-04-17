@@ -1,6 +1,5 @@
 package com.beatifying.backend.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDate;

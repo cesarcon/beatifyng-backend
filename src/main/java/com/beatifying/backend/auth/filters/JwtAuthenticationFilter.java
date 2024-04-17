@@ -1,6 +1,8 @@
 package com.beatifying.backend.auth.filters;
 
+import com.beatifying.backend.dto.Login;
 import com.beatifying.backend.entities.Usuario;
+import com.beatifying.backend.repositories.UsuarioRepository;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,36 +20,32 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.beatifying.backend.auth.TokenJwtConfig.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
+    private UsuarioRepository usuarioRepository;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository) {
         this.authenticationManager = authenticationManager;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        Usuario user = null;
+        Login user = null;
         String username = null;
         String password = null;
 
         try {
-            user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
+            user = new ObjectMapper().readValue(request.getInputStream(), Login.class);
             username = user.getNumeroDocumento();
             password = user.getPassword();
-
-            // logger.info("Username desde request InputStream (raw) " + username);
-            // logger.info("Password desde request InputStream (raw) " + password);
 
         } catch (StreamReadException e) {
             e.printStackTrace();
@@ -64,15 +62,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
 
-        String username = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal())
+        String numeroDocumento = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal())
                 .getUsername();
-
+        System.out.println("creando token");
+        System.out.println(numeroDocumento);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByNumeroDocumento(numeroDocumento);
+        String username = usuarioOptional.map(Usuario::getNombre).orElse(null);
+        Integer idUsuario = usuarioOptional.map(Usuario::getIdUsuario).orElse(null);
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         boolean isAdmin = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        boolean isSeller = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_SELLER"));
+        boolean isBuyer = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_BUYER"));
         Claims claims = Jwts.claims();
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
         claims.put("isAdmin", isAdmin);
+        claims.put("isSeller", isSeller);
+        claims.put("isBuyer", isBuyer);
         claims.put("username", username);
+        claims.put("idUsuario", idUsuario);
 
         String token = Jwts.builder()
                 .setClaims(claims)

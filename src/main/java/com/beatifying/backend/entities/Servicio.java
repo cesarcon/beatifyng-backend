@@ -28,8 +28,14 @@ public class Servicio {
 
     @Column(name = "id_categoria", insertable = false, updatable = false)
     private Integer idCategoria;
+    @Column(name = "id_usuario", insertable = false, updatable = false)
+    private Integer idUsuario;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 }

@@ -21,6 +21,7 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Integer> {
     public List<Usuario> findByGenero(String genero);
 
     public Optional<Usuario> findByNumeroDocumentoAndPassword (String numeroDocumento, String password);
+    Optional<Usuario> findByNumeroDocumento(String numeroDocumento);
 
     @Query(nativeQuery = true,
     value = "SELECT us.id_usuario as idUsuario, us.nombre as nombre, avg(usp.valor) puntuacion, us.img_ppal as foto" +

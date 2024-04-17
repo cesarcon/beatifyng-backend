@@ -44,6 +44,13 @@ public class UsuarioDetail {
     @Column(name = "img_ppal")
     private String imagenPrincipal;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"),
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "role_id"})})
+    private List<Role> roles;
     @OneToMany(mappedBy = "comprador", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Factura> compras;
     @OneToMany(mappedBy = "vendedor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
