@@ -42,6 +42,10 @@ public class ServicioService {
         return servicioRepository.findByIdUsuario(idUsuario);
     }
 
+    public List<Servicio> consultarServiciosPorCategoria (Integer idCategoria){
+        return servicioRepository.findByIdCategoria(idCategoria);
+    }
+
     public Servicio consultarPorId (Integer id) {
         Optional<Servicio> servicio = servicioRepository.findById(id);
         if(servicio.isPresent()){

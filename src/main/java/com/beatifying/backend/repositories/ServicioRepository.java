@@ -10,4 +10,5 @@ import java.util.List;
 public interface ServicioRepository extends CrudRepository<Servicio, Integer> {
 
     List<Servicio> findByIdUsuario(Integer idUsuario);
+    List<Servicio> findByIdCategoria(Integer idCategoria);
 }

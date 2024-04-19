@@ -33,6 +33,11 @@ public class ServicioController {
         return new ResponseEntity<>(servicios, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/categoria/{id}")
+    public ResponseEntity<List<Servicio>> consultarServiciosPorCategoria(@PathVariable Integer id) {
+        List<Servicio> servicios = servicioService.consultarServiciosPorCategoria(id);
+        return new ResponseEntity<>(servicios, HttpStatus.OK);
+    }
     @DeleteMapping(value = "/{idService}")
     public ResponseEntity<Object> borrarPorId(@PathVariable Integer idService) {
         servicioService.borrarPorId(idService);
