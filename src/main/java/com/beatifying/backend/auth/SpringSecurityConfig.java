@@ -46,6 +46,7 @@ public class SpringSecurityConfig {
         return http.authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/users/destacados").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/Score").permitAll()
                 .requestMatchers(HttpMethod.GET, "/services").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
