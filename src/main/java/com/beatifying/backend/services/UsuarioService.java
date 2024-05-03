@@ -4,18 +4,24 @@ import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Puntuacion;
 import com.beatifying.backend.entities.Role;
+import com.beatifying.backend.entities.Servicio;
 import com.beatifying.backend.entities.Usuario;
 import com.beatifying.backend.repositories.PuntuacionesRepository;
 import com.beatifying.backend.repositories.UsuarioDetailRepository;
 import com.beatifying.backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 public class UsuarioService {
@@ -42,7 +48,31 @@ public class UsuarioService {
             roles.add(Role.builder().id(3L).name("ROLE_BUYER").build());
         }
         usuario.setRoles(roles);
-        return usuarioRepository.save(usuario);
+        return guardarImagen(usuario);
+    }
+    private Usuario guardarImagen(Usuario usuario) {
+        String base64Image = usuario.getImagenPrincipal();
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        usuario.setImagenPrincipal("");
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+        if (Objects.nonNull(nuevoUsuario)) {
+            StringBuilder fileName = new StringBuilder();
+            fileName.append("imagen_usuario");
+            fileName.append(nuevoUsuario.getIdUsuario());
+            fileName.append(".jpg");
+            String uploadDirectory = "./src/main/resources/images/";
+            String path = uploadDirectory.concat(fileName.toString());
+            try (FileOutputStream fos = new FileOutputStream(new File(path))) {
+                fos.write(imageBytes);
+                nuevoUsuario.setImagenPrincipal(path);
+                return usuarioRepository.save(nuevoUsuario);
+            } catch (IOException e) {
+                usuarioRepository.deleteById(nuevoUsuario.getIdUsuario());
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public List<UsuarioDTO> consultarTodos(){
@@ -93,11 +123,15 @@ public class UsuarioService {
             usuarioActualizado.setPassword(optional.get().getPassword());
             usuarioActualizado.setLatitud(optional.get().getLatitud());
             usuarioActualizado.setLongitud(optional.get().getLongitud());
-            return usuarioRepository.save(usuario);
+            if (usuario.getImagenPrincipal() == null) {
+                usuarioActualizado.setImagenPrincipal(optional.get().getImagenPrincipal());
+                return usuarioRepository.save(usuarioActualizado);
+            }
+            return guardarImagen(usuarioActualizado);
+
         } else {
             return null;
         }
-
     }
 
     public UsuarioDTO login (String numeroDocumento, String password) {
@@ -137,11 +171,21 @@ public class UsuarioService {
             usuarioDestacadosDTO.setIdUsuario((Integer) x.get("idUsuario"));
             usuarioDestacadosDTO.setNombre((String) x.get("nombre"));
             usuarioDestacadosDTO.setPuntuacion((Double) x.get("puntuacion"));
-            usuarioDestacadosDTO.setFoto((String) x.get("foto"));
+            try {
+                usuarioDestacadosDTO.setFoto(cargarImagen((String) x.get("foto")));
+            } catch (IOException e) {
+                usuarioDestacadosDTO.setFoto("");
+            }
             destacadosDTOS.add(usuarioDestacadosDTO);
                 });
 
         return destacadosDTOS;
+    }
+
+    private String cargarImagen(String foto) throws IOException {
+        Path imagePath = Paths.get(foto);
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
 
     public Usuario buscarUsuarioPorId(Integer id) {

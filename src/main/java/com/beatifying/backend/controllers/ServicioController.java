@@ -1,5 +1,6 @@
 package com.beatifying.backend.controllers;
 
+import com.beatifying.backend.dto.ServicioDTO;
 import com.beatifying.backend.entities.Servicio;
 import com.beatifying.backend.services.ServicioService;
 import jakarta.validation.Valid;
@@ -9,9 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/services")
@@ -22,8 +24,8 @@ public class ServicioController {
     private ServicioService servicioService;
 
     @GetMapping
-    public ResponseEntity<List<Servicio>> consultarServicios() {
-        List<Servicio> servicios = servicioService.consultarServicios();
+    public ResponseEntity<List<ServicioDTO>> consultarServicios() throws IOException {
+        List<ServicioDTO> servicios = servicioService.consultarServicios();
         return new ResponseEntity<>(servicios, HttpStatus.OK);
     }
 
@@ -49,20 +51,49 @@ public class ServicioController {
         if (bindingResult.hasErrors()) {
             return validation(bindingResult);
         }
-        Servicio nuevoServicio = servicioService.guardarServicio(servicio);
-
-        return new ResponseEntity<>(nuevoServicio, HttpStatus.CREATED);
+        return guardarImagen(servicio, true);
     }
 
     @PutMapping
-    public ResponseEntity<Object> actualizarServicio(@RequestBody Servicio servicio){
+    public ResponseEntity<?> actualizarServicio(@RequestBody Servicio servicio){
         Servicio servicioConsultado = servicioService.consultarPorId(servicio.getIdServicio());
-
         if (servicioConsultado == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
-            Servicio servicioActualizado = servicioService.guardarServicio(servicio);
-            return new ResponseEntity<>(servicioActualizado, HttpStatus.OK);
+            if (servicio.getUrlImagen() == null) {
+                servicio.setUrlImagen(servicioConsultado.getUrlImagen());
+                Servicio servicioActualizado = servicioService.guardarServicio(servicio);
+                return new ResponseEntity<>(servicioActualizado, HttpStatus.OK);
+            } else {
+                return guardarImagen(servicio, false);
+            }
+        }
+    }
+
+    private ResponseEntity<?> guardarImagen(Servicio servicio, Boolean crear) {
+        String base64Image = servicio.getUrlImagen();
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        servicio.setUrlImagen("");
+        Servicio nuevoServicio = servicioService.guardarServicio(servicio);
+        if (Objects.nonNull(nuevoServicio)) {
+            StringBuilder fileName = new StringBuilder();
+            fileName.append("imagen_service");
+            fileName.append(nuevoServicio.getIdServicio());
+            fileName.append(".jpg");
+            String uploadDirectory = "./src/main/resources/images/";
+            String path = uploadDirectory.concat(fileName.toString());
+            try (FileOutputStream fos = new FileOutputStream(new File(path))) {
+                fos.write(imageBytes);
+                nuevoServicio.setUrlImagen(path);
+                servicio = servicioService.guardarServicio(nuevoServicio);
+                return new ResponseEntity<>(servicio,
+                        crear ? HttpStatus.CREATED : HttpStatus.OK);
+            } catch (IOException e) {
+                servicioService.borrarPorId(nuevoServicio.getIdServicio());
+                return new ResponseEntity<>("Error al guardar la imagen: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Error al guardar el servicio", HttpStatus.BAD_REQUEST);
         }
     }
 
