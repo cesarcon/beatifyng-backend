@@ -1,5 +1,6 @@
 package com.beatifying.backend.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -10,11 +11,16 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class FacturaDTO {
-    private double subTotalVenta;
-    private double totalImpuesto;
-    private double totalVenta;
-    private Integer codigoFactura;
+    @NotNull
+    private Double subTotalVenta;
+    @NotNull
+    private Double totalImpuesto;
+    @NotNull
+    private Double totalVenta;
+    @NotNull
     private Integer comprador;
+    @NotNull
     private Integer vendedor;
+    @NotNull
     private List<DetalleFacturaDTO> detallesFactura;
 }

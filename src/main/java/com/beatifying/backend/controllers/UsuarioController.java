@@ -1,6 +1,7 @@
 package com.beatifying.backend.controllers;
 
 import com.beatifying.backend.dto.Login;
+import com.beatifying.backend.dto.UbicacionUsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Usuario;
@@ -89,5 +90,20 @@ public class UsuarioController {
             errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
         });
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @PutMapping (value= "/location")
+    public ResponseEntity<?> actualizarUbicacion(@Valid @RequestBody UbicacionUsuarioDTO usuario,
+                                                      BindingResult result){
+        if (result.hasErrors()) {
+            return validation(result);
+        }
+        Usuario usuarioActualizado = usuarioService.updateLocationUser(usuario);
+        if (usuarioActualizado == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+
     }
 }

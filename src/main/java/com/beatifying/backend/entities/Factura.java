@@ -31,8 +31,6 @@ public class Factura {
     private double totalImpuesto;
     @NotNull
     private double totalVenta;
-    @NotNull
-    private Integer codigoFactura;
     @ManyToOne
     @JoinColumn(name = "id_comprador")
     private Usuario comprador;

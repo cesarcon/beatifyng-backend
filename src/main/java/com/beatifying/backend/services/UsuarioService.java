@@ -1,5 +1,6 @@
 package com.beatifying.backend.services;
 
+import com.beatifying.backend.dto.UbicacionUsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDTO;
 import com.beatifying.backend.dto.UsuarioDestacadosDTO;
 import com.beatifying.backend.entities.Puntuacion;
@@ -192,6 +193,19 @@ public class UsuarioService {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isPresent()) {
             return usuario.get();
+        } else {
+            return null;
+        }
+    }
+
+    public Usuario updateLocationUser(UbicacionUsuarioDTO usuario) {
+        Optional<Usuario> optional = usuarioRepository.findById(usuario.getIdUsuario());
+        if (optional.isPresent()) {
+            Usuario usuarioActualizado = optional.orElseThrow();
+            usuarioActualizado.setLatitud(usuario.getLatitud());
+            usuarioActualizado.setLongitud(usuario.getLongitud());
+            return usuarioRepository.save(usuarioActualizado);
+
         } else {
             return null;
         }

@@ -47,6 +47,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/users/destacados").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/users/location").hasRole("USER")
                 .requestMatchers("/users/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/Score").permitAll()
                 .requestMatchers(HttpMethod.POST, "/services").hasRole("SELLER")
@@ -56,6 +57,9 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/services/categoria/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/services").permitAll()
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/factura").hasRole("BUYER")
+                .requestMatchers(HttpMethod.GET, "/factura/compras/{idUsuario}").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/factura/ventas/{idUsuario}").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager(),

@@ -61,7 +61,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-
         String numeroDocumento = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal())
                 .getUsername();
         System.out.println("creando token");
@@ -69,6 +68,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Optional<Usuario> usuarioOptional = usuarioRepository.findByNumeroDocumento(numeroDocumento);
         String username = usuarioOptional.map(Usuario::getNombre).orElse(null);
         Integer idUsuario = usuarioOptional.map(Usuario::getIdUsuario).orElse(null);
+        String email = usuarioOptional.map(Usuario::getEmail).orElse(null);
+        String direccion = usuarioOptional.map(Usuario::getDireccion).orElse(null);
+        String ciudad = usuarioOptional.map(Usuario::getCiudad).orElse(null);
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         boolean isAdmin = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
         boolean isSeller = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_SELLER"));
@@ -80,6 +82,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("isBuyer", isBuyer);
         claims.put("username", username);
         claims.put("idUsuario", idUsuario);
+        claims.put("email", email);
+        claims.put("direccion", direccion);
+        claims.put("ciudad", ciudad);
 
         String token = Jwts.builder()
                 .setClaims(claims)

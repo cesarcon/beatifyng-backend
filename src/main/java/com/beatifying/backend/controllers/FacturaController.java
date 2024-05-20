@@ -3,6 +3,7 @@ package com.beatifying.backend.controllers;
 import com.beatifying.backend.dto.FacturaDTO;
 import com.beatifying.backend.entities.Categoria;
 import com.beatifying.backend.entities.Factura;
+import com.beatifying.backend.entities.Servicio;
 import com.beatifying.backend.services.FacturaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,16 @@ public class FacturaController {
     @Autowired
     private FacturaService facturaService;
 
+    @GetMapping(value = "/compras/{idUsuario}")
+    public ResponseEntity<List<Factura>> consultarComprasPorUsuario(@PathVariable Integer idUsuario) {
+        List<Factura> facturas = facturaService.consultarPorComprador(idUsuario);
+        return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
+    @GetMapping(value = "/ventas/{idUsuario}")
+    public ResponseEntity<List<Factura>> consultarVentasPorUsuario(@PathVariable Integer idUsuario) {
+        List<Factura> facturas = facturaService.consultarPorVendedor(idUsuario);
+        return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "/{idFactura}")
     public ResponseEntity<Object> deleteById(@PathVariable int idFactura) {

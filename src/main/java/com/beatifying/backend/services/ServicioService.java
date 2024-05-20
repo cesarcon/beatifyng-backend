@@ -41,37 +41,58 @@ public class ServicioService {
 
     }
 
-    public List<ServicioDTO> consultarServicios () throws IOException {
+    public List<ServicioDTO> consultarServicios () {
         List<Servicio> consultados = (List<Servicio>) servicioRepository.findAll();
         List<ServicioDTO> servicioDTOS = new ArrayList<>();
         for (Servicio s: consultados) {
-            servicioDTOS.add(ServicioDTO.builder()
-                    .idServicio(s.getIdServicio())
-                    .nombre(s.getNombre())
-                    .precio(s.getPrecio())
-                    .descripcion(s.getDescripcion())
-                    .urlImagen(cargarImagen(s.getUrlImagen()))
-                    .idCategoria(s.getIdCategoria())
-                    .idUsuario(s.getIdUsuario()).build());
+            servicioDTOS.add(convertirADto(s));
+        }
+        return servicioDTOS;
+    }
+    public List<ServicioDTO> serviciosOrdenadosPorUbicacion (Double lat, Double lon) {
+        List<Servicio> consultados = servicioRepository.ordenadosPorUbicacion(lat, lon);
+        List<ServicioDTO> servicioDTOS = new ArrayList<>();
+        for (Servicio s: consultados) {
+            servicioDTOS.add(convertirADto(s));
         }
         return servicioDTOS;
     }
 
-    private String cargarImagen(String urlImagen) throws IOException {
-        Path imagePath = Paths.get(urlImagen);
-        byte[] imageBytes = Files.readAllBytes(imagePath);
+    private String cargarImagen(String urlImagen) {
+        try {
+            Path imagePath = Paths.get(urlImagen);
+            byte[] imageBytes = Files.readAllBytes(imagePath);
 
-        return Base64.getEncoder().encodeToString(imageBytes);
+            return Base64.getEncoder().encodeToString(imageBytes);
+        } catch (IOException e) {
+            System.out.println(e);
+            return "";
+        }
+
     }
 
     public List<Servicio> consultarServiciosPorUsuario (Integer idUsuario){
         return servicioRepository.findByIdUsuario(idUsuario);
     }
 
-    public List<Servicio> consultarServiciosPorCategoria (Integer idCategoria){
-        return servicioRepository.findByIdCategoria(idCategoria);
+    public List<ServicioDTO> consultarServiciosPorCategoria (Integer idCategoria) {
+        List<Servicio> consultados =  servicioRepository.findByIdCategoria(idCategoria);
+        List<ServicioDTO> servicioDTOS = new ArrayList<>();
+        for (Servicio s: consultados) {
+            servicioDTOS.add(convertirADto(s));
+        }
+        return servicioDTOS;
     }
 
+    public List<ServicioDTO> serviciosPorCategoriaOrder (Integer idCategoria, Double lat, Double lon) {
+        List<Servicio> consultados =  servicioRepository
+                .porCategoriaOrdenadosPorUbicacion(idCategoria, lat, lon);
+        List<ServicioDTO> servicioDTOS = new ArrayList<>();
+        for (Servicio s: consultados) {
+            servicioDTOS.add(convertirADto(s));
+        }
+        return servicioDTOS;
+    }
     public Servicio consultarPorId (Integer id) {
         Optional<Servicio> servicio = servicioRepository.findById(id);
         if(servicio.isPresent()){
@@ -82,5 +103,17 @@ public class ServicioService {
     }
     public void borrarPorId (Integer id) {
         servicioRepository.deleteById(id);
+    }
+
+    private ServicioDTO convertirADto (Servicio s) {
+        return ServicioDTO.builder()
+                .idServicio(s.getIdServicio())
+                .nombre(s.getNombre())
+                .precio(s.getPrecio())
+                .descripcion(s.getDescripcion())
+                .urlImagen(cargarImagen(s.getUrlImagen()))
+                .idCategoria(s.getIdCategoria())
+                .idUsuario(s.getIdUsuario())
+                .usuario(s.getUsuario().getNombre()).build();
     }
 }

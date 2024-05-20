@@ -15,4 +15,5 @@ public class ServicioDTO {
     private String urlImagen;
     private Integer idCategoria;
     private Integer idUsuario;
+    private String usuario;
 }

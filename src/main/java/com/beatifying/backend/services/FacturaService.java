@@ -31,8 +31,7 @@ public class FacturaService {
         Factura nuevaFactura = Factura.builder()
                 .subTotalVenta(facturaDTO.getSubTotalVenta())
                 .totalImpuesto(facturaDTO.getTotalImpuesto())
-                .totalVenta(facturaDTO.getTotalVenta())
-                .codigoFactura(facturaDTO.getCodigoFactura()).build();
+                .totalVenta(facturaDTO.getTotalVenta()).build();
 
         Optional<Usuario> comprador = usuarioRepository.findById(facturaDTO.getComprador());
         Optional<Usuario> vendedor = usuarioRepository.findById(facturaDTO.getVendedor());
@@ -63,6 +62,15 @@ public class FacturaService {
 
     public void deleteById (int idFactura) {
         facturaRepository.deleteById(idFactura);
+    }
+
+    public List<Factura> consultarPorVendedor (Integer id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        return facturaRepository.findByVendedor(usuario.orElseThrow());
+    }
+    public List<Factura> consultarPorComprador (Integer id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        return facturaRepository.findByComprador(usuario.orElseThrow());
     }
 
 }

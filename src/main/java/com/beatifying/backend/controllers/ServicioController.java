@@ -24,9 +24,17 @@ public class ServicioController {
     private ServicioService servicioService;
 
     @GetMapping
-    public ResponseEntity<List<ServicioDTO>> consultarServicios() throws IOException {
-        List<ServicioDTO> servicios = servicioService.consultarServicios();
-        return new ResponseEntity<>(servicios, HttpStatus.OK);
+    public ResponseEntity<List<ServicioDTO>> consultarServicios(
+            @RequestParam(required = false) Double lat, @RequestParam(required = false) Double lon)
+            {
+        if (Objects.isNull(lat) || Objects.isNull(lon)) {
+            List<ServicioDTO> servicios = servicioService.consultarServicios();
+            return new ResponseEntity<>(servicios, HttpStatus.OK);
+        } else {
+            List<ServicioDTO> servicios = servicioService.serviciosOrdenadosPorUbicacion(lat, lon);
+            return new ResponseEntity<>(servicios, HttpStatus.OK);
+        }
+
     }
 
     @GetMapping(value = "/{idUsuario}")
@@ -36,9 +44,16 @@ public class ServicioController {
     }
 
     @GetMapping(value = "/categoria/{id}")
-    public ResponseEntity<List<Servicio>> consultarServiciosPorCategoria(@PathVariable Integer id) {
-        List<Servicio> servicios = servicioService.consultarServiciosPorCategoria(id);
-        return new ResponseEntity<>(servicios, HttpStatus.OK);
+    public ResponseEntity<List<ServicioDTO>> consultarServiciosPorCategoria(@PathVariable Integer id,
+                 @RequestParam(required = false) Double lat, @RequestParam(required = false) Double lon) {
+        if (Objects.isNull(lat) || Objects.isNull(lon)) {
+            List<ServicioDTO> servicios = servicioService.consultarServiciosPorCategoria(id);
+            return new ResponseEntity<>(servicios, HttpStatus.OK);
+        } else {
+            List<ServicioDTO> servicios = servicioService.serviciosPorCategoriaOrder(id, lat, lon);
+            return new ResponseEntity<>(servicios, HttpStatus.OK);
+        }
+
     }
     @DeleteMapping(value = "/{idService}")
     public ResponseEntity<Object> borrarPorId(@PathVariable Integer idService) {
