@@ -38,8 +38,8 @@ public class ServicioController {
     }
 
     @GetMapping(value = "/{idUsuario}")
-    public ResponseEntity<List<Servicio>> consultarServiciosPorUsuario(@PathVariable Integer idUsuario) {
-        List<Servicio> servicios = servicioService.consultarServiciosPorUsuario(idUsuario);
+    public ResponseEntity<List<ServicioDTO>> consultarServiciosPorUsuario(@PathVariable Integer idUsuario) {
+        List<ServicioDTO> servicios = servicioService.consultarServiciosPorUsuario(idUsuario);
         return new ResponseEntity<>(servicios, HttpStatus.OK);
     }
 

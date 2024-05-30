@@ -71,8 +71,13 @@ public class ServicioService {
 
     }
 
-    public List<Servicio> consultarServiciosPorUsuario (Integer idUsuario){
-        return servicioRepository.findByIdUsuario(idUsuario);
+    public List<ServicioDTO> consultarServiciosPorUsuario (Integer idUsuario){
+        List<Servicio> servicios = servicioRepository.findByIdUsuario(idUsuario);
+        List<ServicioDTO> servicioDTOS = new ArrayList<>();
+        for (Servicio s: servicios) {
+            servicioDTOS.add(convertirADto(s));
+        }
+        return servicioDTOS;
     }
 
     public List<ServicioDTO> consultarServiciosPorCategoria (Integer idCategoria) {
